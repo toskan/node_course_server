@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
 const keys = require('./config/keys');
+const bodyParser = require('body-parser');
 
 mongoose.connect(keys.mongoURI);
 require('./models/User');
@@ -12,6 +13,8 @@ require('./services/passport');
 
 const app = express();
 //app use calls  serves as middlewares (preprocessing of incoming request)
+app.use(bodyParser.json());
+
 app.use(
 	cookieSession({
 		maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -24,6 +27,7 @@ app.use(passport.session());
 
 //we import the authRoutes file which exports a function which we immediately call with the second parenthese
 require('./routes/authRoutes')(app);
+require('./routes/billingRoutes')(app);
 
 //create route handler and associate with a given route
 // app.get('/', (req, res) => {
