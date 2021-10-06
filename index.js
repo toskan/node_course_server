@@ -29,6 +29,20 @@ app.use(passport.session());
 require('./routes/authRoutes')(app);
 require('./routes/billingRoutes')(app);
 
+if (process.env.NODE_ENV === 'production') {
+	//Express will serve up prod assets
+	//like our main.js or css file
+	app.use(express.static('client/build'));
+
+	//Express will serve up the index.html file
+	//if it doesn't recognize the route
+
+	const path = require('path');
+	app.get('*', (req, res) => {
+		res.sendFile(path.resolve(_dirname, 'client', 'build', 'index.html'));
+	});
+}
+
 //create route handler and associate with a given route
 // app.get('/', (req, res) => {
 // 	res.send({ bye: 'buddy' });
